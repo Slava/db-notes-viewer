@@ -1,0 +1,45 @@
+<head>
+  <title>Notes Viewer</title>
+</head>
+
+
+<template name="layout">
+  {{> Template.dynamic template=main data=data}}
+</template>
+
+<template name="piece">
+  fetching from Dropbox ...
+  {{redirect pieceId}}
+</template>
+
+<template name="app">
+  {{> loginButtons}}
+  {{#with root}}
+    {{> filesViewer}}
+  {{/with}}
+</template>
+
+<template name="filesViewer" args="{ path, contents: [ { path, is_dir, rev } ] }">
+  <div class="viewer">
+    <div class="path">
+      / {{#each pathParts}} <a href="{{url}}">{{part}}</a> / {{/each}}
+    </div>
+    {{#if is_dir}}
+      <ul>
+        {{#each file in files}}
+          {{#with viewFile file path}}
+            <li>
+              <a href="{{url}}">{{name}}</a>
+              {{#unless isDir}}
+                - <a href="{{shareUrl}}" target="_blank">share link</a>
+              {{/unless}}
+            </li>
+          {{/with}}
+        {{/each}}
+      </ul>
+    {{else}}
+      File: {{path}}
+    {{/if}}
+  </div>
+</template>
+
